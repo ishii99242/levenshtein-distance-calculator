@@ -27,3 +27,10 @@ The standard Wagner-Fischer algorithm builds a full (m+1) by (n+1) matrix, which
 - Distance is measured in Unicode code points, so `"café"` and `"cafe"` differ by 1 (the precomposed `é` vs `e`). Combining marks count as separate code points.
 - The shorter input is used as the column axis internally to keep buffers small, so `distance(a, b)` always equals `distance(b, a)`.
 - `normalized_distance` divides by the length of the longer string and returns `0.0` when both strings are empty.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
